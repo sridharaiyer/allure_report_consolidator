@@ -6,32 +6,12 @@ import sys
 import os
 import subprocess
 import pprint
+from os.path import expanduser
 
 
 TEST_CATEGORY_OPTIONS = ['AWSQASmokeTest', 'AWSRegression', 'QASmokeTest', 'QARegression', 'CTSmoke', 'ProdSmoke']
 SVN_BASE_LOCATION = 'http://svn.proddev.cccis.com:8090/svn/QA/trunk/acceptance-projects/'
-DEFAULT_WORKSPACE = ''
-
-if sys.platform.startswith('win32'):
-    print("Windows")
-    DEFAULT_WORKSPACE = 'C:\Workspace'
-elif sys.platform.startswith('linux2'):
-    print("Linux")
-elif sys.platform.startswith('cygwin'):
-    print("Windows/Cygwin")
-elif sys.platform.startswith('darwin'):
-    print("Mac OS X")
-    DEFAULT_WORKSPACE = '/Users/sridhariyer//workspace'
-elif sys.platform.startswith('os2'):
-    print("OS/2")
-elif sys.platform.startswith('os2emx'):
-    print("OS/2 EMX")
-elif sys.platform.startswith('riscos'):
-    print("RiscOS")
-elif sys.platform.startswith('atheos'):
-    print("AtheOS")
-
-print('Does dir {} exists? {}'.format(DEFAULT_WORKSPACE, os.path.isdir(DEFAULT_WORKSPACE)))
+DEFAULT_WORKSPACE = os.path.join(expanduser('~'), 'workspace')
 
 parser = argparse.ArgumentParser(add_help=True,)
 
@@ -60,6 +40,7 @@ if len(sys.argv) == 1:
 if args.list:
     for project_module in svn.remote.RemoteClient(SVN_BASE_LOCATION).list():
         print(project_module)
+    exit(0)
 
 print('Running the category {} in the projects {}'.format(args.category, args.acceptance_modules_collection))
 
